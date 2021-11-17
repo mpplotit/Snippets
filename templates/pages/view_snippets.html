@@ -14,46 +14,46 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col">
-                <p>На данной страницы будут отображаться все созданные сниппеты.</p>
-                <p>Пока тут пусто, скоро мы это исправим!</p>
-                <hr>
-            </div>
-        </div>
+
 
         <div class="row">
             <div class="col-4 offset-2">
                 Список сниппетов:
+            </div>
         </div>
 
 
-
+        <div class="row">
             <div class="col">
-   <table class="table table-striped">
-       <thead class="thead-dark">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
 
-       <tr>
-           <th scope="col">ID</th>
-           <th scope="col">Название</th>
-           <th scope="col">Дата создания</th>
-       </tr>
-       </thead>
-       <tbody>
-         {% for snippet in snippets %}
-       <tr>
-           <td scope="row">{{snippet.id}}</td>
-           <td><a href="{% url 'show-snippet' snippet_number=snippet.id %}">{{snippet.name}}</a></td>
-           <td>{{snippet.creation_date}}</td>
-       </tr>
-        {% endfor %}
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Название</th>
+                        <th scope="col">Дата создания</th>
+                        <th scope="col">Тип действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for snippet in snippets %}
+                    <tr>
+                        <td scope="row">{{snippet.id}}</td>
+                        <td><a href="{% url 'show-snippet' snippet_number=snippet.id %}">{{snippet.name}}</a></td>
+                        <td>{{snippet.creation_date}}</td>
+                        <td><a href="{% url 'delete_snippet' snippet_number=snippet.id %}">Удалить сниппет</a> |
+                        <a href="{%url 'modify_snippet' snippet_number=snippet.id %}">Изменить сниппет</a></td>
 
-       </tbody>
-   </table>
-   <div align="right">
-       <i style="color: gray;">Всего сниппетов: 2</i>
-   </div>
-</div>
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+                <div align="right">
+                    <i style="color: gray;">Всего сниппетов: {{count}}</i>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 {% endblock %}

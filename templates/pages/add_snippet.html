@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% block style %}
+.name {color:blue}
+{% endblock %}
 {% block content %}
 <!-- Begin page content -->
 <main role="main" class="mt-3 flex-shrink-0">
@@ -12,19 +14,19 @@
             </div>
         </div>
 
-    <div class="row">
-        <div class="col">
+        <div class="row">
+            <div class="col">
 
-            <form action="/create_new_snippet" method="post">
-                {% csrf_token %}
-                 {{form.as_p}}
-                <div class="form-group row">
-                    <div class="col-8">
-                        <input type="submit" class="btn btn-primary btn-block" value="Сохранить">
+                <form action="/create_new_snippet" method="post">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <div class="form-group row">
+                        <div class="col-8">
+                            <input type="submit" class="btn btn-primary btn-block" value="Сохранить">
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
 
+            </div>
         </div>
-    </div>
-{% endblock %}
+        {% endblock %}

@@ -12,3 +12,4 @@ class Snippet(models.Model):
     rate = models.PositiveSmallIntegerField(null=False, blank=False, default=1)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE,
                              blank=True, null=True)
+    public = models.BooleanField(default=True)  # True-public/False-private

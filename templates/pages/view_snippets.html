@@ -33,7 +33,9 @@
                         <th scope="col">Название</th>
                         <th scope="col">Дата создания</th>
                         <th scope="col">Пользователь</th>
+                        <th scope="col">Публичный</th>
                         <th scope="col">Тип действия</th>
+
                     </tr>
                     </thead>
                     <tbody>
@@ -43,6 +45,7 @@
                         <td><a href="{% url 'show-snippet' snippet_number=snippet.id %}">{{snippet.name}}</a></td>
                         <td>{{snippet.creation_date}}</td>
                         <td>{{snippet.user.username}}</td>
+                        <td>{{snippet.public}}</td>
                         <td><a href="{% url 'delete_snippet' snippet_number=snippet.id %}">Удалить сниппет</a> |
                         <a href="{%url 'modify_snippet' snippet_number=snippet.id %}">Изменить сниппет</a></td>
 

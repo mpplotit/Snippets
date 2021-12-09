@@ -30,6 +30,10 @@
         }
         {% block style %}
         {% endblock %}
+
+
+
+
     </style>
 </head>
 
@@ -48,11 +52,58 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="form-inline"><a class="btn btn-outline-secondary" href="{% url 'snippets-add' %}">Добавить сниппет</a></li>
+                    <li class="form-inline"><a class="btn btn-outline-secondary" href="{% url 'snippets-add' %}">Добавить
+                        сниппет</a></li>
                     <li class="form-inline"><a class="btn btn-outline-info" href="{% url 'snippets-list' %}">Посмотреть
                         сниппеты</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li class="form-inline"><a class="btn btn-outline-info" href="{% url 'my-snippets-list' %}">Мои
+                        сниппеты</a></li>
+                    {% endif %}
                 </ul>
             </div>
+            {% if request.user.is_authenticated %}
+            <span style="color:white">Welcome, {{request.user.username }}</span>
+            <div><a href="{% url 'logout' %}">logout</a></div>
+            {% else %}
+            <div class="navbar-nav mr-right nav-item dropdown dropdown-menu-right">
+                <a class="btn btn-outline-primary my-2 my-sm-0 dropdown-toggle" href="#" id="navbarDropdown"
+                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Авторизация</a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                    <form class="w-100 px-4 py-3" action="{% url 'login' %}" method="POST">{% csrf_token %}
+                        <div class="form-group form-inline">
+                            <input name="username" type="text" class="form-control" placeholder="Username" required>
+                        </div>
+                        <div class="form-group form-inline">
+                            <input name="password" type="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Войти</button>
+                    </form>
+                    <div class="dropdown-divider"></div>
+                </div>
+            </div>
+            {% if errors %}
+            <ul>
+                {% for error in errors %}
+                <li style="color:red">{{error}}</li>
+                {% endfor %}
+
+            </ul>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">{% csrf_token %}
+                <p>
+                    <label style="color:white" for="username">username: </label>
+                    <input name="username" type="text">
+                </p>
+                <p>
+                    <label style="color:white" for="password">password: </label>
+                    <input name="password" type="password">
+                </p>
+                <button type="submit">login</button>
+            </form>
+            {% endif %}
         </div>
     </nav>
 </header>

@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from MainApp.models import Snippet
 from django.core.exceptions import ObjectDoesNotExist
 from MainApp.forms import SnippetForm
+from django.contrib import auth
 
 
 def index_page(request):
@@ -42,7 +43,10 @@ def create_new_snippet(request):
     if request.method == "POST":
         form = SnippetForm(request.POST)
         if form.is_valid():
-            form.save()
+            snippet = form.save(commit=False)
+            if request.user.is_authenticated:
+                snippet.user = request.user
+                snippet.save()
             return redirect("snippets-list")
         return render(request, 'add_snippet.html', {'form': form})
 
@@ -79,3 +83,42 @@ def modify_snippet(request, snippet_number):
         snippet.save()
 
     return redirect('snippets-list')
+
+
+def login_page(request):
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        # print("username =", username)
+        # print("password =", password)
+        user = auth.authenticate(request, username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+        else:
+            # Return error message
+            context = {
+                'errors': ['неверный логин или пароль'],
+                'pagename': 'PythonBin'
+            }
+            return render(request, 'pages/index.html', context)
+    return redirect('home')
+
+
+def logout(request):
+    auth.logout(request)
+    return redirect('home')
+
+
+def my_snippets_page(request):
+    userid = request.user
+
+    if request.user.is_authenticated:
+        snippets = Snippet.objects.filter(user=userid)
+    else:
+        snippets = Snippet.objects.all()
+
+    context = {'pagename': 'Просмотр сниппетов',
+               'snippets': snippets,
+               'count': len(snippets)
+               }
+    return render(request, 'pages/view_snippets.html', context)

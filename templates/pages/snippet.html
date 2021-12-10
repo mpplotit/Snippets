@@ -11,7 +11,7 @@
             </div>
         </div>
         {% if type == 'view' %}
-<fieldset disabled>
+        <fieldset disabled>
             <div class="row disabled">
                 <div class="col col-8">
                     Название: <input type="text" value="{{ snippet.name }}" class="form-control">
@@ -20,7 +20,7 @@
                     Дата создания:<input type="text" value="{{ snippet.creation_date }}" class="form-control">
                 </div>
             </div>
-            <hr>lsdz_venv/gitdb.s
+            <hr>
             <div class="row">
                 <div class="col">
                     <div class="p-2 h-100" style="border:1px solid #ced4da; border-radius:5px;">
@@ -30,41 +30,63 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <div class="p-2 h-100" style="border:1px solid #ced4da; border-radius:5px;">
+
+                        <input name="public" type="checkbox" checked="{{ snippet.public }}" class="form-control">
+
+                    </div>
+                </div>
+            </div>
         </fieldset>
         {% elif type == 'edit' %}
-<main role="main" class="mt-3 flex-shrink-0">
-    <div class="container">
-        <div class="row">
-            <div class="col text-center">
-                <h1>{{ pagename }}</h1>
-                <hr>
-            </div>
-        </div>
-<form action="" method="post">
-    {% csrf_token %}
-        <div class="row disabled">
-            <div class="col col-8">
-                Название: <input name="name" type="text" value="{{ snippet.name }}" class="form-control">
-            </div>
-            <div class="col col-4">
-                Дата создания:<input name="creation_date" type="text" value="{{ snippet.creation_date }}" class="form-control">
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col">
-                <div class="p-2 h-100" style="border:1px solid #ced4da; border-radius:5px;">
+        <main role="main" class="mt-3 flex-shrink-0">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center">
+                        <h1>{{ pagename }}</h1>
+                        <hr>
+                    </div>
+                </div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="row disabled">
+                        <div class="col col-8">
+                            Название: <input name="name" type="text" value="{{ snippet.name }}" class="form-control">
+                        </div>
+                        <div class="col col-4">
+                            Дата создания:<input name="creation_date" type="date" value="{{ snippet.creation_date|date:'Y-m-d' }}"
+                                                 class="form-control">
+                        </div>
+
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col">
+                            <div class="p-2 h-100" style="border:1px solid #ced4da; border-radius:5px;">
 
                          <textarea name="code">
                         {{ snippet.code }}
                     </textarea>
 
-                </div>
-            </div>
-        </div>
-    <input type="submit">
-    </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="p-2 h-100" style="border:1px solid #ced4da; border-radius:5px;">
 
-        {%endif%}
+                                <input name="public" type="checkbox" {% if snippet.public %}checked{% endif %}
+                                       class="form-control">
 
-{% endblock %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="submit">
+                </form>
+
+                {%endif%}
+
+                {% endblock %}

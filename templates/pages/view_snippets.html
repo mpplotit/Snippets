@@ -46,8 +46,14 @@
                         <td>{{snippet.creation_date}}</td>
                         <td>{{snippet.user.username}}</td>
                         <td>{{snippet.public}}</td>
-                        <td><a href="{% url 'delete_snippet' snippet_number=snippet.id %}">Удалить сниппет</a> |
-                        <a href="{%url 'modify_snippet' snippet_number=snippet.id %}">Изменить сниппет</a></td>
+                        <td>
+                            {% if request.user.is_authenticated %}
+                            {% if request.user == snippet.user %}
+                            <a href="{% url 'delete_snippet' snippet_number=snippet.id %}">Удалить сниппет</a> |
+                        <a href="{%url 'modify_snippet' snippet_number=snippet.id %}">Изменить сниппет</a>
+                            {% endif %}
+                            {% endif %}
+                        </td>
 
                     </tr>
                     {% endfor %}

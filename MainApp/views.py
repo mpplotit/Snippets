@@ -1,8 +1,8 @@
-from django.http import Http404
+from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from MainApp.models import Snippet
 from django.core.exceptions import ObjectDoesNotExist
-from MainApp.forms import SnippetForm
+from MainApp.forms import SnippetForm, UserRegistrationForm
 from django.contrib import auth
 
 
@@ -56,7 +56,10 @@ def delete_snippet(request, snippet_number):
         snippet = Snippet.objects.get(id=snippet_number)
     except ObjectDoesNotExist:
         raise Http404
-    snippet.delete()
+    if snippet.user == request.user:
+        snippet.delete()
+    else:
+        raise HttpResponseForbidden
     snippets = Snippet.objects.all()
     context = {'pagename': 'Просмотр сниппетов',
                'snippets': snippets
@@ -76,11 +79,16 @@ def modify_snippet(request, snippet_number):
                    }
         return render(request, 'pages/snippet.html', context)
     if request.method == 'POST':
-        form_data = request.POST
-        snippet.name = form_data['name']
-        snippet.creation_date = form_data['creation_date']
-        snippet.code = form_data['code']
-        snippet.save()
+        if snippet.user == request.user:
+            form_data = request.POST
+            public = form_data.get("public") == 'on'
+            snippet.name = form_data['name']
+            snippet.creation_date = form_data['creation_date']
+            snippet.code = form_data['code']
+            snippet.public = public
+            snippet.save()
+        else:
+            raise HttpResponseForbidden
 
     return redirect('snippets-list')
 
@@ -122,3 +130,21 @@ def my_snippets_page(request):
                'count': len(snippets)
                }
     return render(request, 'pages/view_snippets.html', context)
+
+
+def register(request):
+    if request.method == "GET":
+        form = UserRegistrationForm()
+        context = {'pagename': 'Регистрация пользователя',
+                   'form': form
+                   }
+        return render(request, 'pages/register.html', context)
+    else:
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        context = {'pagename': 'Регистрация пользователя',
+                   'form': form
+                   }
+        return render(request, 'pages/register.html', context)
